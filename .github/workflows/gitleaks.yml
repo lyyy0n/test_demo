@@ -10,7 +10,7 @@ on:
   push:
   workflow_dispatch:
   schedule:
-    - cron: "0 4 * * *" # run once a day at 4 AM
+    - cron: "0 9 * * *" # run once a day at 9 AM
 jobs:
   scan:
     name: gitleaks-action-HEAD
@@ -23,4 +23,3 @@ jobs:
       - uses: ./ # Runs the action that's in the root directory of the repo checked out above. i.e. This action itself.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}}
