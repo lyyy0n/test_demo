@@ -1,33 +1,18 @@
-name: Gitleaks Scan
-
+name: gitleaks
 on:
-  push:
-    branches:
-      - main  # 你可以根据需要修改分支
   pull_request:
-    branches:
-      - main  # 你可以根据需要修改分支
-
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *" # run once a day at 4 AM
 jobs:
-  gitleaks:
+  scan:
+    name: gitleaks
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 获取所有历史记录以进行完整的扫描
-
-      - name: Run Gitleaks
-        uses: zricethezav/gitleaks-action@v2
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # GITLEAKS_CONFIG: .gitleaks.toml  # 如果你有自定义配置文件，可以指定路径
-        with:
-          args: --report-format json --report-path gitleaks-report.json
-
-      - name: Upload Gitleaks Report
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: gitleaks-report
-          path: gitleaks-report.json
