@@ -1,5 +1,10 @@
 repos:
   - repo: https://github.com/gitleaks/gitleaks
-rev: v8.19.0 hooks:
-  - id: gitleaks
-  
+    rev: v8.19.0
+    hooks:
+      - id: gitleaks
+        name: gitleaks
+        entry: gitleaks protect --report-path=json.txt
+        language: system
+        types: [text]
+        stages: [pre-commit]
