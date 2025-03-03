@@ -17,5 +17,5 @@ jobs:
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_NOTIFY_USER_LIST: "@lyyy0n" #当gitleaks-action检测到泄漏时应收到警报的 GitHub 帐户列表
+          GITLEAKS_NOTIFY_USER_LIST: "@jinhezai-in" #当gitleaks-action检测到泄漏时应收到警报的 GitHub 帐户列表
 
