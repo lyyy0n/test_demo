@@ -7,6 +7,8 @@
 name: gitleaks-action-HEAD
 on:
   pull_request:
+    branches: [master]
+    types: [closed]
   push:
   workflow_dispatch:
   schedule:
@@ -16,7 +18,7 @@ jobs:
     name: gitleaks-action-HEAD
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
           ref: master
