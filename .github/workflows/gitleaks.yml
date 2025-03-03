@@ -1,26 +1,33 @@
-# Copyright © 2022 Gitleaks LLC - All Rights Reserved.
-# You may use this code under the terms of the GITLEAKS-ACTION END-USER LICENSE AGREEMENT.
-# You should have received a copy of the GITLEAKS-ACTION END-USER LICENSE AGREEMENT with this file.
-# If not, please visit https://github.com/gitleaks/gitleaks-action/blob/main/COMMERCIAL-LICENSE.txt.
+name: Gitleaks Scan
 
-# CAUTION: This is for testing purposes.
-name: gitleaks-action-HEAD
 on:
-  pull_request:
   push:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 4 * * *" # run once a day at 4 AM
+    branches:
+      - main  # 你可以根据需要修改分支
+  pull_request:
+    branches:
+      - main  # 你可以根据需要修改分支
+
 jobs:
-  scan:
-    name: gitleaks-action-HEAD
+  gitleaks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:  
-          fetch-depth: 0
-          ref: ${{ github.ref }}
-          repositories: my-org/example-action my-org/another-action@v3.1.0 my-org/third-action
-      - uses: ./ # Runs the action that's in the root directory of the repo checked out above. i.e. This action itself.
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 获取所有历史记录以进行完整的扫描
+
+      - name: Run Gitleaks
+        uses: zricethezav/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GITLEAKS_CONFIG: .gitleaks.toml  # 如果你有自定义配置文件，可以指定路径
+        with:
+          args: --report-format json --report-path gitleaks-report.json
+
+      - name: Upload Gitleaks Report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: gitleaks-report
+          path: gitleaks-report.json
